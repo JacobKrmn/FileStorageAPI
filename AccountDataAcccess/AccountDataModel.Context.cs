@@ -13,10 +13,10 @@ namespace AccountDataAcccess
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class AccountEntities : DbContext
+    public partial class AccountDBEntities : DbContext
     {
-        public AccountEntities()
-            : base("name=AccountEntities")
+        public AccountDBEntities()
+            : base("name=AccountDBEntities")
         {
         }
     

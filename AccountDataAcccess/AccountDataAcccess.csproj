@@ -75,8 +75,6 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>AccountDataModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="AccountDataModel.edmx.diagram">
       <DependentUpon>AccountDataModel.edmx</DependentUpon>
     </None>
@@ -84,19 +82,19 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="AccountDataModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AccountDataModel.Context.cs</LastGenOutput>
       <DependentUpon>AccountDataModel.edmx</DependentUpon>
+      <LastGenOutput>AccountDataModel.Context.cs</LastGenOutput>
     </Content>
     <Content Include="AccountDataModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>AccountDataModel.edmx</DependentUpon>
       <LastGenOutput>AccountDataModel.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
