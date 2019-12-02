@@ -21,25 +21,17 @@ namespace FileStorageAPI.Controllers
 
         private HttpClient client;
 
-        public void initializeClient()
-        {
-            //Call before making any request.
-            HttpClientHandler clientHandler = new HttpClientHandler();
-            clientHandler.Proxy = null;
-            clientHandler.UseProxy = false;
-
-            client = new HttpClient(clientHandler);
-        }
-
-        public async Task<List<string>> makeRequest(HttpMethod method, string content = null)
+        public async Task<string> makeRequest(HttpMethod method, string uri, string content = null)
         {
             AuthenticationBuilder authBuilder = new AuthenticationBuilder();
 
-            String uri = string.Format("http://{0}.file.core.windows.net?comp=list", storageAcc);
+            StringBuilder sb = new StringBuilder(uri);
+            sb.Append(content);
+            string requestUri = sb.ToString();
 
             Byte[] requestPayload = null;
 
-            using (var httpRequestMessage = new HttpRequestMessage(method, uri)
+            using (var httpRequestMessage = new HttpRequestMessage(method, requestUri)
             {
                 Content = (requestPayload == null) ? null : new ByteArrayContent(requestPayload)
             }) {
@@ -52,30 +44,17 @@ namespace FileStorageAPI.Controllers
                 using (HttpResponseMessage httpResponseMessage =
                     await new HttpClient().SendAsync(httpRequestMessage).ConfigureAwait(false))
                 {
-                    List<string> list = new List<string>();
                     if (httpResponseMessage.StatusCode == HttpStatusCode.OK)
                     {
                         String xmlString = await httpResponseMessage.Content.ReadAsStringAsync();
-
-                        //Solve BOM problem.
-                        int gtIndex = xmlString.IndexOf('<');
-                        if (gtIndex > 0) {
-                            xmlString = xmlString.Remove(0, gtIndex);
-                        }
-
-                        XElement x = XElement.Parse(xmlString);
-
-                        foreach (XElement container in x.Element("Shares").Elements("Share")) {
-                        list.Add(container.Element("Name").Value);
-                        }
-                        return list;
+                        return xmlString;
                     }
                     else
                     {
-                        list.Add(String.Format("Received Code {0}, accompanied by message: {1}",
+                       string result = String.Format("Received Code {0}, accompanied by message: {1}",
                             httpResponseMessage.StatusCode.ToString(),
-                            httpResponseMessage.Content.ToString()));
-                        return list;
+                            httpResponseMessage.Content.ToString());
+                        return result;
                     }
                 }
 

@@ -53,8 +53,7 @@ namespace FileStorageAPI.Azure
             HttpMethod method = httpRequestMessage.Method;
             String MessageSignature = String.Format("{0}\n\n\n{1}\n{5}\n\n\n\n{2}\n\n\n\n{3}{4}",
                 method.ToString(),
-                (method == HttpMethod.Get || method == HttpMethod.Head) ? String.Empty
-                : httpRequestMessage.Content.Headers.ContentLength.ToString(),
+                String.Empty,
                 ifMatch,
                 getCanonicalizedHeaders(httpRequestMessage),
                 getCanonicalizedResource(httpRequestMessage.RequestUri, storageAccountName), md5);
