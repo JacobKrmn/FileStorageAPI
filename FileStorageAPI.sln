@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileStorageAPI", "FileStorageAPI\FileStorageAPI.csproj", "{EC1011D8-28BC-4A12-BF67-9F630276C1E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountDataAcccess", "AccountDataAcccess\AccountDataAcccess.csproj", "{EAB6A95B-099B-4BDD-AB23-87C34217434E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountDataAccess", "AccountDataAcccess\AccountDataAccess.csproj", "{EAB6A95B-099B-4BDD-AB23-87C34217434E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareData", "ShareData\ShareData.csproj", "{AA129CCB-838D-4B1A-BAE0-63FA38237649}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{EAB6A95B-099B-4BDD-AB23-87C34217434E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAB6A95B-099B-4BDD-AB23-87C34217434E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAB6A95B-099B-4BDD-AB23-87C34217434E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA129CCB-838D-4B1A-BAE0-63FA38237649}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA129CCB-838D-4B1A-BAE0-63FA38237649}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA129CCB-838D-4B1A-BAE0-63FA38237649}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA129CCB-838D-4B1A-BAE0-63FA38237649}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
