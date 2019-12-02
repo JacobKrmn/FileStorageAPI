@@ -13,7 +13,7 @@ namespace FileStorageAPI.Controllers
         string storageURL = "https://www.conexysfilestorage.file.core.windows.net";
         Requester requester = new Requester();
 
-        public string Get() {
+        public List<string> Get() {
             //TODO: Implement RBAC support
             string url = storageURL + "?comp=list";
             requester.initializeClient();

@@ -31,7 +31,7 @@ namespace FileStorageAPI.Controllers
             client = new HttpClient(clientHandler);
         }
 
-        public async Task<string> makeRequest(HttpMethod method, string content = null)
+        public async Task<List<string>> makeRequest(HttpMethod method, string content = null)
         {
             AuthenticationBuilder authBuilder = new AuthenticationBuilder();
 
@@ -55,17 +55,27 @@ namespace FileStorageAPI.Controllers
                     List<string> list = new List<string>();
                     if (httpResponseMessage.StatusCode == HttpStatusCode.OK)
                     {
-                        string xmlString = await httpResponseMessage.Content.ReadAsStringAsync();
+                        String xmlString = await httpResponseMessage.Content.ReadAsStringAsync();
 
+                        //Solve BOM problem.
+                        int gtIndex = xmlString.IndexOf('<');
+                        if (gtIndex > 0) {
+                            xmlString = xmlString.Remove(0, gtIndex);
+                        }
 
-                        return xmlString;
+                        XElement x = XElement.Parse(xmlString);
+
+                        foreach (XElement container in x.Element("Shares").Elements("Share")) {
+                        list.Add(container.Element("Name").Value);
+                        }
+                        return list;
                     }
                     else
                     {
-                        string res = String.Format("Received Code {0}, accompanied by message: {1}",
+                        list.Add(String.Format("Received Code {0}, accompanied by message: {1}",
                             httpResponseMessage.StatusCode.ToString(),
-                            httpResponseMessage.Content.ToString());
-                        return res.ToString();
+                            httpResponseMessage.Content.ToString()));
+                        return list;
                     }
                 }
 
