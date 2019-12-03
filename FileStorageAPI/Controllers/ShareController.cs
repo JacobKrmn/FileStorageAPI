@@ -43,5 +43,10 @@ namespace FileStorageAPI.Controllers
             string result = requester.makeRequest(HttpMethod.Put, uri).Result;
         }
 
+        public void Delete(string shareName, string resType) {
+            string uri = String.Format("{0}/{1}?resType={2}", storageURL, shareName, resType);
+            string result = requester.makeRequest(HttpMethod.Delete, uri).Result;
+        }
+
     }
 }
