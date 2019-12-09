@@ -1,0 +1,73 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Web.Http;
+using System.Xml.Linq;
+using Microsoft.Azure;
+using Microsoft.Azure.Storage;
+using Microsoft.Azure.Storage.File;
+
+namespace FileStorageAPI.Controllers
+{
+
+    public class FileController : ApiController
+    {
+        string storageUrl = "http://conexysfilestorage.file.core.windows.net";
+        Requester requester = new Requester();
+
+        public List<string> Get(string shareName, string path) {
+            string uri = String.Format("{0}/{1}{2}?resType=directory&comp=list", storageUrl, shareName, path);
+            string xmlString = requester.makeRequest(HttpMethod.Get, uri).Result;
+
+            List<string> results = new List<string>();
+
+            int gtIndex = xmlString.IndexOf('<');
+            if (gtIndex > 0) {
+                xmlString = xmlString.Remove(0, gtIndex);
+            }
+
+            XElement x = XElement.Parse(xmlString);
+
+            foreach (XElement container in x.Element("Entries").Elements("File")) {
+                results.Add(container.Element("Name").Value);
+            }
+
+            return results;
+        }
+
+        public string Get(string shareName, string path, string fileName) {
+            CloudStorageAccount storageAcc = CloudStorageAccount.Parse(
+                CloudConfigurationManager.GetSetting("StorageConnectionString"));
+
+            CloudFileClient cloudFileClient = storageAcc.CreateCloudFileClient();
+            CloudFileShare share = cloudFileClient.GetShareReference(shareName);
+            try
+            {
+                if (share.Exists())
+                {
+                    CloudFileDirectory rootDir = share.GetRootDirectoryReference();
+                    CloudFileDirectory targetDir = rootDir.GetDirectoryReference(path);
+                    if (targetDir.Exists())
+                    {
+                        CloudFile file = targetDir.GetFileReference(fileName);
+                        if (file.Exists())
+                        {
+                            return file.DownloadTextAsync().Result;
+                        }
+                        else return "Invalid file name.";
+                    }
+                    else return "Invalid directory";
+                }
+                else return "Invalid share.";
+            }
+            catch (Exception ex) {
+                return ex.Message;
+            }
+
+        }
+    }
+
+        
+
+    }
+
