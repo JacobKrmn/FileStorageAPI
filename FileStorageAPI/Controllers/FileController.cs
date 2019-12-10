@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using System.Xml.Linq;
 using Microsoft.Azure;
@@ -65,9 +68,56 @@ namespace FileStorageAPI.Controllers
             }
 
         }
-    }
 
-        
+        public HttpResponseMessage Post(string shareName, string path, string fileName) {
+            var httpRequest = HttpContext.Current.Request;
+            if (httpRequest.Files.Count > 0)
+            {
+                foreach (string file in httpRequest.Files)
+                {
+                    var postedFile = httpRequest.Files[file];
+                    CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(
+                        CloudConfigurationManager.GetSetting("StorageConnectionString"));
+                    CloudFileClient cloudFileClient = cloudStorageAccount.CreateCloudFileClient();
+                    CloudFileShare share = cloudFileClient.GetShareReference(shareName);
+
+                    try
+                    {
+                        if (share.Exists())
+                        {
+                            CloudFileDirectory rootDir = share.GetRootDirectoryReference();
+                            CloudFileDirectory targetDir = rootDir.GetDirectoryReference(path);
+
+                            CloudFile cloudFile = targetDir.GetFileReference(fileName);
+                            Stream fileStream = postedFile.InputStream;
+
+                            cloudFile.UploadFromStream(fileStream);
+                            fileStream.Dispose();
+
+                            return Request.CreateResponse(HttpStatusCode.Created);
+                        }
+                        else {
+                            return Request.CreateResponse(HttpStatusCode.BadRequest);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, ex.Message);
+                    }
+                }
+            }
+            else {
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
+            }
+            return Request.CreateResponse(HttpStatusCode.InternalServerError);
+        }
+
+        public string Delete(string shareName, string path, string fileName) {
+            string uri = String.Format("{0}/{1}{2}/{3}", storageUrl, shareName, path, fileName);
+            return requester.makeRequest(HttpMethod.Delete, uri).Result;
+
+        }
 
     }
+}
 
