@@ -5,13 +5,16 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Xml.Linq;
 using FileStorageAPI.Models;
 
 namespace FileStorageAPI.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class ShareController : ApiController
     {
+
         string storageURL = "http://conexysfilestorage.file.core.windows.net";
         Requester requester = new Requester();
 
